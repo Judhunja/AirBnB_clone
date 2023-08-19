@@ -21,9 +21,6 @@ Layout:
     -   width: 100%
     -   text `Best School` center vertically and horizontally
     -   always at the bottom at the page
--   GitHub repository: `AirBnB_clone`
--   Directory: `web_static`
--   File: `0-index.html`
 
 ### 1. Head styling
 
