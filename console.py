@@ -3,6 +3,7 @@
 import cmd
 import shlex
 import sys
+import json
 import re
 from models.__init__ import storage
 from models.base_model import BaseModel
@@ -38,14 +39,51 @@ class HBNBCommand(cmd.Cmd):
             sys.stdout.flush()
             print("(hbnb)")
 
+    def default(self, line):
+        """ Handles function calls """
+        try:
+            args = line.split("(")
+        except Exception:
+            super().default(line)
+        if len(args) == 2:
+            namefunc = args[0]
+            id = args[1].strip("')\"")
+
+            if "." in namefunc and namefunc.split(".")[1] == "destroy":
+                name = namefunc.split(".")[0]
+
+                if name not in self.classes:
+                    print("** class doesn't exist **")
+                    return
+                self.do_destroy(name + " " + id)
+
+            elif "." in namefunc and namefunc.split(".")[1] == "show":
+                name = namefunc.split(".")[0]
+                if name not in self.classes:
+                    print("** class doesn't exist **")
+                    return
+                self.do_show(name + " " + id)
+
+        elif len(args) == 3:
+            namefunc = args[0]
+            id_attr_value = args[1].strip(')')
+            if "." in namefunc and namefunc.split(".")[1] == "update":
+                name = namefunc.split(".")[0]
+                id, attr, value = shlex.split(id_attr_value)
+                if value.startswith('{') and value.endswith('}'):
+                    value = json.loads(value)
+                self.do_update(f"{name} {id} {attr} '{value}'")
+        else:
+            super().default(line)
+
     def do_quit(self, line):
-        """Quits if the user types in quit or crtl+D(EOF)\ni
+        """Quits if the user types in quit or crtl+D(EOF)
         arg:
             line:arg passed eg quit"""
         return True
 
     def do_EOF(self, line):
-        """Quits the program\n
+        """Quits the program
         arg:
             line:argument pass to cmd"""
         return True
