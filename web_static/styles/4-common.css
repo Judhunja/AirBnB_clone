@@ -9,6 +9,7 @@ body {
 .container {
         display: flex;
         flex-direction: column;
+        flex-wrap: wrap;
         align-items: stretch;
         max-width: 1000px;
         margin-top: 30px;
